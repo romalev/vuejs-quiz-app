@@ -1,29 +1,27 @@
 # vuejs-quiz-app
+Context
+-
+Inspired by: This is a simple POC of vuejs based application shows how vuejs can be utilized to build nice `frontend` components. Essentially this is a quiz applicaiton where question are pulled from `https://opentdb.com/`. Given app uses: 
+- [Boostrap Vue](https://bootstrap-vue.js.org/)
+- [lodash](https://lodash.com/)
 
-## Project setup
+
+Setup
+-
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+```
+npm i bootstrap-vue bootstrap
+```
+Compiles and hot-reloads for development
+-
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+Compiles and minifies for production
+-
 ```
 npm run build
 ```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
