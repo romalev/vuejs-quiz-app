@@ -41,8 +41,7 @@ export default {
     next() {
       this.index++;
     },
-    increment(isCorrect) {
-      alert("increment called");
+    increment(isCorrect) {    
       if (isCorrect) {
         this.numCorrect++
       }

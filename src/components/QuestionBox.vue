@@ -10,11 +10,19 @@
           v-for="(answer, index) in answers"
           v-bind:key="index"
           v-on:click="selectAnswer(index)"
-          v-bind:class="[selectedIndex === index ? 'selected' : '']"
+          v-bind:class="[
+          !answered && selectedIndex === index ? 'selected' : 
+          answered && correctIndex === index ? 'correct' : 
+          answered && selectedIndex === index && correctIndex !== index ? 'incorrect' :
+          '']"
         >{{ answer }}</b-list-group-item>
       </b-list-group>
 
-      <b-button variant="primary" v-on:click="submitAnswer">Submit</b-button>
+      <b-button
+        variant="primary"
+        v-on:click="submitAnswer"
+        v-bind:disabled="selectedIndex === null || answered"
+      >Submit</b-button>
       <b-button v-on:click="next" variant="success" href="#">Next</b-button>
     </b-jumbotron>
   </div>
@@ -33,7 +41,8 @@ export default {
     return {
       selectedIndex: null,
       correctIndex: null,
-      shuffledAnswers: []
+      shuffledAnswers: [],
+      answered: false
     };
   },
   computed: {
@@ -49,6 +58,7 @@ export default {
       immediate: true,
       handler() {
         this.selectedIndex = null;
+        this.answered = false;
         this.shuffleAnswers();
       }
     }
@@ -62,6 +72,7 @@ export default {
       if (this.selectedIndex === this.correctIndex) {
         isCorrect = true;
       }
+      this.answered = true;
       this.increment(isCorrect);
     },
     shuffleAnswers() {
