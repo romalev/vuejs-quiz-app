@@ -1,92 +1,106 @@
 <template>
   <div class="question-box-container">
     <b-jumbotron>
-      <template slot="lead">{{ currentQuestion.question }}</template>
+      <template slot="lead">
+        {{ currentQuestion.question }}
+      </template>
 
       <hr class="my-4" />
 
       <b-list-group>
         <b-list-group-item
-          v-for="(answer, index) in answers"
-          v-bind:key="index"
-          v-on:click="selectAnswer(index)"
-          v-bind:class="[
-          !answered && selectedIndex === index ? 'selected' : 
-          answered && correctIndex === index ? 'correct' : 
-          answered && selectedIndex === index && correctIndex !== index ? 'incorrect' :
-          '']"
-        >{{ answer }}</b-list-group-item>
+          v-for="(answer, index) in shuffledAnswers"
+          :key="index"
+          @click.prevent="selectAnswer(index)"
+          :class="answerClass(index)"
+        >
+          {{ answer }}
+        </b-list-group-item>
       </b-list-group>
 
       <b-button
         variant="primary"
-        v-on:click="submitAnswer"
-        v-bind:disabled="selectedIndex === null || answered"
-      >Submit</b-button>
-      <b-button v-on:click="next" variant="success" href="#">Next</b-button>
+        @click="submitAnswer"
+        :disabled="selectedIndex === null || answered"
+      >
+        Submit
+      </b-button>
+      <b-button @click="next" variant="success">
+        Next
+      </b-button>
     </b-jumbotron>
   </div>
 </template>
 
 <script>
-import _ from "lodash";
+import _ from 'lodash'
 export default {
-  name: "QuestionBox",
   props: {
     currentQuestion: Object,
     next: Function,
     increment: Function
   },
-  data() {
+  data: function() {
     return {
       selectedIndex: null,
       correctIndex: null,
       shuffledAnswers: [],
       answered: false
-    };
+    }
   },
   computed: {
     answers() {
-      let answers = [...this.currentQuestion.incorrect_answers]; // make a copy of currentQuestion.incorrect_answers array
-      answers.push(this.currentQuestion.correct_answer);
-      return answers;
+      // this function is no longer used in finished code
+      // it is replaced by the watch function below and the
+      // shuffleAnswers method
+      let answers = [...this.currentQuestion.incorrect_answers]
+      answers.push(this.currentQuestion.correct_answer)
+      return answers
     }
   },
-  // in watch objcet we can watch for changes in our props - it wil run this function when it changes.
   watch: {
-    currectQuestion: {
+    currentQuestion: {
       immediate: true,
       handler() {
-        this.selectedIndex = null;
-        this.answered = false;
-        this.shuffleAnswers();
+        this.selectedIndex = null
+        this.answered = false
+        this.shuffleAnswers()
       }
     }
   },
   methods: {
     selectAnswer(index) {
-      this.selectedIndex = index;
+      this.selectedIndex = index
     },
     submitAnswer() {
-      let isCorrect = false;
+      let isCorrect = false
       if (this.selectedIndex === this.correctIndex) {
-        isCorrect = true;
+        isCorrect = true
       }
-      this.answered = true;
-      this.increment(isCorrect);
+      this.answered = true
+      this.increment(isCorrect)
     },
     shuffleAnswers() {
-      let answers = [
-        ...this.currentQuestion.incorrect_answers,
-        this.currentQuestion.correct_answer
-      ];
-      this.shuffledAnswers = _.shuffle(answers);
-      this.correctIndex = this.shuffledAnswers.indexOf(
-        this.currentQuestion.correct_answer
-      );
+      let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
+      this.shuffledAnswers = _.shuffle(answers)
+      this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
+    },
+    answerClass(index) {
+      let answerClass = ''
+      if (!this.answered && this.selectedIndex === index) {
+        answerClass = 'selected'
+      } else if (this.answered && this.correctIndex === index) {
+        answerClass = 'correct'
+      } else if (this.answered &&
+        this.selectedIndex === index &&
+        this.correctIndex !== index
+      ) {
+        answerClass = 'incorrect'
+      }
+      return answerClass
     }
   }
-};
+}
 </script>
 
 <style scoped>
@@ -94,7 +108,7 @@ export default {
   margin-bottom: 15px;
 }
 .list-group-item:hover {
-  background: #eee;
+  background: #EEE;
   cursor: pointer;
 }
 .btn {
